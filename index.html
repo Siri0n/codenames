@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Codenames</title>
+	<style>
+		body{
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border: 0;
+			margin: 0;
+			padding: 0;
+		}
+		#table{
+			width: 90vmin;
+			height: 90vmin;
+			box-sizing: border-box;
+			border-spacing: 2.2vmin;
+		}
+		#table.red{
+			border: 4vmin solid red;
+		}
+		#table.blue{
+			border: 4vmin solid blue;
+		}
+		#table td{
+			height: 12vmin;
+			width: 12vmin;
+			border: 1px solid black;
+			box-sizing: border-box;
+		}
+		#table td.red{
+			background-color: red;
+		}
+		#table td.blue{
+			background-color: blue;
+		}
+		#table td.black{
+			background-color: black;
+		}
+		#table td.white{
+			background-color: #ccc;
+		}
+
+		#refresh{
+			width:90vmin;
+			height:10vmin;
+		}
+	</style>
+</head>
+<body>
+	<table id="table"></table>
+	<button id="refresh" onclick="refresh();">Обновить</button>
+	<script>
+function shuffle(arr){
+	var i = arr.length, temp, r;
+	while (0 !== i) {
+		r = Math.floor(Math.random() * i);
+		i -= 1;
+		temp = arr[i];
+		arr[i] = arr[r];
+		arr[r] = temp;
+	}
+	return arr;
+}
+
+
+function assignTimes(unusedNumbers, targetArray, value, times){
+	for(var i = 0; i < times; i++){
+		targetArray[unusedNumbers.pop()] = value;
+	}
+}
+
+function refresh(){
+	var numbers = [];
+	var i, j, tr, td;
+
+	for(i = 0; i < 25; i++){
+		numbers.push(i);
+	}
+	shuffle(numbers);
+	var classes = [];
+
+	var firstPlayer = Math.random() > 0.5 ? "red" : "blue";
+	var secondPlayer = firstPlayer == "red" ? "blue" : "red";
+
+	assignTimes(numbers, classes, firstPlayer, 9);
+	assignTimes(numbers, classes, secondPlayer, 8);
+	assignTimes(numbers, classes, "black", 1);
+	assignTimes(numbers, classes, "white", 7);
+
+	var table = document.getElementById("table");
+	table.innerHTML = "";
+	table.className = firstPlayer;
+	for(i = 0; i < 5; i++){
+		tr = document.createElement("tr");
+		for(j = 0; j < 5; j++){
+			td = document.createElement("td");
+			td.className = classes.pop();
+			tr.appendChild(td);
+		}
+		table.appendChild(tr)
+	}
+
+}
+
+refresh();
+	</script>
+</body>
+</html>
